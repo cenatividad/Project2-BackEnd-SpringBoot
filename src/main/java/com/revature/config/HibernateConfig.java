@@ -10,7 +10,10 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.revature.models.Project;
+import com.revature.models.Story;
 import com.revature.models.User;
+import com.revature.models.UserProject;
 
 @Configuration
 @EnableTransactionManagement
@@ -24,6 +27,9 @@ public class HibernateConfig {
 		
 		// Set annotated Classes
 		factoryBean.setAnnotatedClasses(User.class);
+		factoryBean.setAnnotatedClasses(Project.class);
+		factoryBean.setAnnotatedClasses(Story.class);
+		factoryBean.setAnnotatedClasses(UserProject.class);
 		factoryBean.setDataSource(getDataSource());
 		return factoryBean;
 	}
