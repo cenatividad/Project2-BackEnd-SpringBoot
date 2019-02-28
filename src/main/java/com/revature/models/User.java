@@ -2,8 +2,10 @@ package com.revature.models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public final class User {
@@ -23,7 +27,6 @@ public final class User {
 	
 	private String email;
 	
-	@Column(length = 255)
 	private String password;
 	
 	@Column(name = "first_name")
@@ -32,14 +35,14 @@ public final class User {
 	@Column(name = "last_name")
 	private String lastName;
 	
-	@ManyToMany
-	@JoinTable(name="owners",
+	@JsonIgnore
+	@ManyToMany(cascade= {CascadeType.ALL}, fetch=FetchType.LAZY)
+	@JoinTable(name="user_story",
 			joinColumns= {@JoinColumn(name="user_id")}, 
 			inverseJoinColumns= {@JoinColumn(name="story_id")})
 	private List<Story> stories;
 	
-	@OneToMany
-	@JoinColumn(name="user_id")
+	@OneToMany(mappedBy="userID")
 	private List<UserProject> userProject;
 
 	public int getUserID() {

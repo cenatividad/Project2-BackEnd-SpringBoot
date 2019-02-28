@@ -1,5 +1,7 @@
 package com.revature.models;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public final class Project {
@@ -17,16 +19,17 @@ public final class Project {
 	@Column(name = "project_id")
 	private int projectID;
 	
-	@ManyToOne(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
-	@JoinColumn(name="cave_id")
-	private Story story;
+	@OneToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY, mappedBy="project")
+	private List<Story> stories;
 	
 	@Column(name = "project_name")
 	private String projectName;
 	
 	private String description;
 	
-	private int owner;
+	@OneToMany(mappedBy="projectID")
+	@JoinColumn(name="user_id")
+	private List<UserProject> userProjects;
 
 	public int getProjectID() {
 		return projectID;
@@ -36,12 +39,12 @@ public final class Project {
 		this.projectID = projectID;
 	}
 
-	public Story getStory() {
-		return story;
+	public List<Story> getStories() {
+		return stories;
 	}
 
-	public void setStory(Story story) {
-		this.story = story;
+	public void setStories(List<Story> stories) {
+		this.stories = stories;
 	}
 
 	public String getProjectName() {
@@ -60,23 +63,14 @@ public final class Project {
 		this.description = description;
 	}
 
-	public int getOwner() {
-		return owner;
-	}
-
-	public void setOwner(int owner) {
-		this.owner = owner;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + owner;
 		result = prime * result + projectID;
 		result = prime * result + ((projectName == null) ? 0 : projectName.hashCode());
-		result = prime * result + ((story == null) ? 0 : story.hashCode());
+		result = prime * result + ((stories == null) ? 0 : stories.hashCode());
 		return result;
 	}
 
@@ -94,8 +88,6 @@ public final class Project {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (owner != other.owner)
-			return false;
 		if (projectID != other.projectID)
 			return false;
 		if (projectName == null) {
@@ -103,27 +95,26 @@ public final class Project {
 				return false;
 		} else if (!projectName.equals(other.projectName))
 			return false;
-		if (story == null) {
-			if (other.story != null)
+		if (stories == null) {
+			if (other.stories != null)
 				return false;
-		} else if (!story.equals(other.story))
+		} else if (!stories.equals(other.stories))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Project [projectID=" + projectID + ", story=" + story + ", projectName=" + projectName
-				+ ", description=" + description + ", owner=" + owner + "]";
+		return "Project [projectID=" + projectID + ", stories=" + stories + ", projectName=" + projectName
+				+ ", description=" + description + "]";
 	}
 
-	public Project(int projectID, Story story, String projectName, String description, int owner) {
+	public Project(int projectID, List<Story> stories, String projectName, String description) {
 		super();
 		this.projectID = projectID;
-		this.story = story;
+		this.stories = stories;
 		this.projectName = projectName;
 		this.description = description;
-		this.owner = owner;
 	}
 
 	public Project() {

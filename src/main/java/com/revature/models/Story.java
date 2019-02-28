@@ -5,14 +5,18 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public final class Story {
@@ -21,25 +25,23 @@ public final class Story {
 	@Column(name = "story_id")
 	private int storyID;
 	
-	@OneToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
-	@JoinColumn(name="cave_id")
-	@Column(name = "project_id")
-	private int projectID;
+	@ManyToOne(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
+	@JoinColumn(name = "project_id")
+	private Project project;
 	
 	@Column(name = "story_name")
 	private String storyName;
 	
 	private String description;
 	
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private StoryStatus status;
 	
 	private int points;
 	
-	@ManyToMany
-	@JoinTable(name="stories",
-			joinColumns= {@JoinColumn(name="story_id")}, 
-			inverseJoinColumns= {@JoinColumn(name="user_id")})
-	private List<Story> owners;
+	@JsonIgnore
+	@ManyToMany(mappedBy="stories")
+	private List<User> owners;
 	
 	@OneToMany
 	@JoinColumn(name="story_id")
@@ -53,12 +55,12 @@ public final class Story {
 		this.storyID = storyID;
 	}
 
-	public int getProjectID() {
-		return projectID;
+	public Project getProject() {
+		return project;
 	}
 
-	public void setProjectID(int projectID) {
-		this.projectID = projectID;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 	public String getStoryName() {
@@ -77,11 +79,13 @@ public final class Story {
 		this.description = description;
 	}
 
-	public String getStatus() {
+	@Enumerated(EnumType.STRING)
+	public StoryStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	@Enumerated(EnumType.STRING)
+	public void setStatus(StoryStatus status) {
 		this.status = status;
 	}
 
@@ -93,11 +97,11 @@ public final class Story {
 		this.points = points;
 	}
 
-	public List<Story> getOwners() {
+	public List<User> getOwners() {
 		return owners;
 	}
 
-	public void setOwners(List<Story> owners) {
+	public void setOwners(List<User> owners) {
 		this.owners = owners;
 	}
 
@@ -116,7 +120,7 @@ public final class Story {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((owners == null) ? 0 : owners.hashCode());
 		result = prime * result + points;
-		result = prime * result + projectID;
+		result = prime * result + ((project == null) ? 0 : project.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + storyID;
 		result = prime * result + ((storyName == null) ? 0 : storyName.hashCode());
@@ -145,12 +149,12 @@ public final class Story {
 			return false;
 		if (points != other.points)
 			return false;
-		if (projectID != other.projectID)
-			return false;
-		if (status == null) {
-			if (other.status != null)
+		if (project == null) {
+			if (other.project != null)
 				return false;
-		} else if (!status.equals(other.status))
+		} else if (!project.equals(other.project))
+			return false;
+		if (status != other.status)
 			return false;
 		if (storyID != other.storyID)
 			return false;
@@ -169,16 +173,16 @@ public final class Story {
 
 	@Override
 	public String toString() {
-		return "Story [storyID=" + storyID + ", projectID=" + projectID + ", storyName=" + storyName + ", description="
+		return "Story [storyID=" + storyID + ", project=" + project + ", storyName=" + storyName + ", description="
 				+ description + ", status=" + status + ", points=" + points + ", owners=" + owners + ", userProject="
 				+ userProject + "]";
 	}
 
-	public Story(int storyID, int projectID, String storyName, String description, String status, int points,
-			List<Story> owners, List<UserProject> userProject) {
+	public Story(int storyID, Project project, String storyName, String description, StoryStatus status, int points,
+			List<User> owners, List<UserProject> userProject) {
 		super();
 		this.storyID = storyID;
-		this.projectID = projectID;
+		this.project = project;
 		this.storyName = storyName;
 		this.description = description;
 		this.status = status;
