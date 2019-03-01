@@ -24,7 +24,7 @@ public final class Project {
 	@OneToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY, mappedBy="project")
 	private List<Story> stories;
 	
-	@Column(name = "project_name")
+	@Column(name = "project_name", nullable=false)
 	private String projectName;
 	
 	private String description;

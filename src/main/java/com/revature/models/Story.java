@@ -29,12 +29,13 @@ public final class Story {
 	@JoinColumn(name = "project_id")
 	private Project project;
 	
-	@Column(name = "story_name")
+	@Column(name = "story_name", nullable=false)
 	private String storyName;
 	
 	private String description;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
 	private StoryStatus status;
 	
 	private int points;
