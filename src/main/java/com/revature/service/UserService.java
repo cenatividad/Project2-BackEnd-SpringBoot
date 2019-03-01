@@ -18,10 +18,8 @@ public class UserService {
 	}
 
 
-	// Transaction Propagation
-	// Concept: Contextual Sessions
+	
 	public User createUser(User user) {
-		// Some internal business logic: validation, etc.
 		return userRepository.createUser(user);
 	}
 
