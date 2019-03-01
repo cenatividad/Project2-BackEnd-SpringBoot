@@ -1,5 +1,6 @@
 package com.revature.service;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,8 @@ public class UserService {
 		InputValidationUtil.isPasswordOK(user.getPassword());
 		InputValidationUtil.isFirstNameOK(user.getFirstName());
 		InputValidationUtil.isLastNameOK(user.getLastName());
+		
+		user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 		
 		try {
 			return userRepository.createUser(user);
