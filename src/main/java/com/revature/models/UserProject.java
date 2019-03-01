@@ -24,9 +24,10 @@ public final class UserProject {
 	private int uPID;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
 	private UserRole role;
 	
-	@Column(name = "invite_status")
+	@Column(name = "invite_status", nullable=false)
 	@Enumerated(EnumType.STRING)
 	private InviteStatus inviteStatus;
 	
