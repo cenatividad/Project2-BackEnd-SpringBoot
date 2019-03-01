@@ -13,6 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * Project entity
+ * @author tiand
+ */
 @Entity
 @Table(name="project")
 public final class Project {
