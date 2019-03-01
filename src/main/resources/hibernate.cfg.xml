@@ -9,5 +9,9 @@
 		<property name="hibernate.connection.pool_size">1</property>
 		
 		<property name="hibernate.hbm2ddl.auto">update</property>
+		<mapping class="com.revature.models.Project"/>
+		<mapping class="com.revature.models.User"/>
+		<mapping class="com.revature.models.UserProject"/>
+		<mapping class="com.revature.models.Story"/>
 	</session-factory>
 </hibernate-configuration>

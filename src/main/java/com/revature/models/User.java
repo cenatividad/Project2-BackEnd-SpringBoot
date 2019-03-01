@@ -13,10 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@Table(name="users")
 public final class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +44,7 @@ public final class User {
 			inverseJoinColumns= {@JoinColumn(name="story_id")})
 	private List<Story> stories;
 	
-	@OneToMany(mappedBy="userID")
+	@OneToMany(mappedBy="user")
 	private List<UserProject> userProject;
 
 	public int getUserID() {

@@ -11,8 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="project")
 public final class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +29,7 @@ public final class Project {
 	
 	private String description;
 	
-	@OneToMany(mappedBy="projectID")
-	@JoinColumn(name="user_id")
+	@OneToMany(mappedBy="project")
 	private List<UserProject> userProjects;
 
 	public int getProjectID() {
