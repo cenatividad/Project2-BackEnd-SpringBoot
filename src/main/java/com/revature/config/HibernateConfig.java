@@ -15,10 +15,19 @@ import com.revature.models.Story;
 import com.revature.models.User;
 import com.revature.models.UserProject;
 
+/**
+ * Configuration for our hibernate session factory
+ * @author tiand
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 public class HibernateConfig {
 	
+	/**
+	 * Generates a session factory for use in repositories
+	 * @return
+	 */
 	@Bean
 	public LocalSessionFactoryBean getSessionFactory() {
 		System.out.println("Configuring session factory");
@@ -34,6 +43,10 @@ public class HibernateConfig {
 		return factoryBean;
 	}
 	
+	/**
+	 * Generates a DataSource for use in configuring the session factory
+	 * @return
+	 */
 	@Bean(name="dataSource")
 	public DataSource getDataSource() {
 		System.out.println("Configuring data source");
@@ -45,6 +58,10 @@ public class HibernateConfig {
 		return dataSource;
 	}
 	
+	/**
+	 * Generates and provides a transaction manager
+	 * @return
+	 */
 	@Bean
 	public HibernateTransactionManager getTransactionManager() {
 		System.out.println("Configuring transaction manager");
