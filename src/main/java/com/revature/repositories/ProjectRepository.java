@@ -19,13 +19,19 @@ public class ProjectRepository {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
 		try(Session session = sf.openSession()) {
-			
 			int id = (int) session.save(project);
 			project.setProjectID(id);
 			return project;
 		}
+	}
+
+	public Project getProject(int id) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+		Project project = new Project();
 		
-		
-		
+		try(Session session = sf.openSession()) {
+			project = session.get(Project.class, id);
+			return project;
+		}
 	}
 }

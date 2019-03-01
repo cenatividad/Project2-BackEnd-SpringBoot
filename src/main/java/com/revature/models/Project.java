@@ -9,9 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Project entity
@@ -25,6 +26,7 @@ public final class Project {
 	@Column(name = "project_id")
 	private int projectID;
 	
+	@JsonIgnore
 	@OneToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY, mappedBy="project")
 	private List<Story> stories;
 	
@@ -33,6 +35,7 @@ public final class Project {
 	
 	private String description;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="project")
 	private List<UserProject> userProjects;
 

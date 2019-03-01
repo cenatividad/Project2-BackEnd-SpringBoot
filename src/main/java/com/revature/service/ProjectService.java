@@ -20,4 +20,8 @@ public class ProjectService {
 	public Project createProject(Project project) {
 		return projectRepository.createProject(project);
 	}
+
+	public Project viewProject(int id) {
+		return projectRepository.getProject(id);
+	}
 }
