@@ -46,6 +46,16 @@ public class UserController {
 	}
 	
 	/**
+	 * Handles post requests to log a user in.
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/login")
+	public User loginUser(@RequestBody User user) {
+		return this.userService.loginUser(user);
+	}
+	
+	/**
 	 * Exception handler that provides meaningful exception messages to the client.
 	 * @param e
 	 * @return

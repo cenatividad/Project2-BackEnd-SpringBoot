@@ -1,9 +1,17 @@
 package com.revature.repositories;
 
+import java.util.List;
+
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
+import org.hibernate.type.StringType;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -36,6 +44,22 @@ public class UserRepository {
 			return user;
 		}
 	}
-	
-	
+
+
+	/**
+	 * Repository method to retrieve a user based on their username
+	 * @param username
+	 * @return
+	 */
+	public User getUserByUsername(String username) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+		
+		try(Session session = sf.openSession()){			
+			List<?> users = session.createQuery("from User u where u.username like :username")
+					.setParameter("username", username, StringType.INSTANCE).list();
+			
+			if(users.isEmpty()) return null;
+			return (User) users.get(0);
+		}
+	}
 }

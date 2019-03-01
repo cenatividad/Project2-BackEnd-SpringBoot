@@ -45,9 +45,28 @@ public class UserService {
 		user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 		
 		try {
-			return userRepository.createUser(user);
+			User createdUser = userRepository.createUser(user);
+			createdUser.setPassword(null);
+			userRepository.createUser(user);
+			return createdUser;
 		} catch (PSQLException e) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
+	}
+
+	/**
+	 * Service to verify user credentials and log them in if they're correct
+	 * @param user
+	 * @return
+	 */
+	public User loginUser(User user) {
+		User targetUser = userRepository.getUserByUsername(user.getUsername());
+		
+		if(targetUser == null || !BCrypt.checkpw(user.getPassword(), targetUser.getPassword())) {
+			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Wrong credentials");
+		}
+		
+		targetUser.setPassword(null);
+		return targetUser;
 	}
 }

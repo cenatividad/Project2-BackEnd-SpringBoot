@@ -63,6 +63,7 @@ public final class User {
 			inverseJoinColumns= {@JoinColumn(name="story_id")})
 	private List<Story> stories;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="user")
 	private List<UserProject> userProject;
 
