@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * Application starting point.
+ * @author tiand
+ */
 @SpringBootApplication
 @EnableSwagger2
 public class Application {

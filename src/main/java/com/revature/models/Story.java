@@ -18,6 +18,10 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Story Entity
+ * @author tiand
+ */
 @Entity
 public final class Story {
 	@Id

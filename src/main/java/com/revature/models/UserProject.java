@@ -14,7 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.revature.models.Project;
-
+/**
+ * User Project Entity
+ * @author tiand
+ *
+ */
 @Entity
 @Table(name="user_project")
 public final class UserProject {
