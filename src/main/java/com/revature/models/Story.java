@@ -29,6 +29,7 @@ public final class Story {
 	@Column(name = "story_id")
 	private int storyID;
 	
+	@JsonIgnore
 	@ManyToOne(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
 	@JoinColumn(name = "project_id")
 	private Project project;
