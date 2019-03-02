@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.revature.dtos.InvitationDTO;
 import com.revature.models.Project;
 import com.revature.models.User;
+import com.revature.models.Story;
 import com.revature.repositories.ProjectRepository;
 import com.revature.repositories.UserRepository;
 
@@ -17,11 +18,13 @@ public class ProjectService {
 	ProjectRepository projectRepository;
 	UserRepository userRepository;
 	
+	StoryService storyService;
 	@Autowired
-	public ProjectService(ProjectRepository projectRepository, UserRepository userRepository) {
+	public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, StoryService storyService) {
 		super();
 		this.projectRepository = projectRepository;
 		this.userRepository = userRepository;
+		this.storyService = storyService;
 	}
 	
 	public Project createProject(Project project) {
@@ -42,5 +45,10 @@ public class ProjectService {
 	
 	public List<Project> getProjectsByUserId(int id) {
 		return projectRepository.getProjectsByUserId(id);
+	}
+
+	public List<Story> getStoriesByProject(int id) {
+		
+		return storyService.getStoriesByProject(id);
 	}
 }
