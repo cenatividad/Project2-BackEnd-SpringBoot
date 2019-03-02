@@ -55,6 +55,14 @@ public final class Project {
 		this.stories = stories;
 	}
 
+	public List<UserProject> getUserProjects() {
+		return userProjects;
+	}
+
+	public void setUserProjects(List<UserProject> userProjects) {
+		this.userProjects = userProjects;
+	}
+
 	public String getProjectName() {
 		return projectName;
 	}

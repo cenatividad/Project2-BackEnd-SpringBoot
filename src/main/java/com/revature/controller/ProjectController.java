@@ -2,12 +2,12 @@ package com.revature.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dtos.InvitationDTO;
 import com.revature.models.Project;
 import com.revature.service.ProjectService;
 
@@ -32,5 +32,10 @@ public class ProjectController {
 		@PostMapping("/viewProject")
 		public Project viewProject(@RequestBody int id) {
 			return this.projectService.viewProject(id);
+		}
+		
+		@PostMapping("/invite")
+		public Project inviteUser(@RequestBody InvitationDTO invitation) {
+			return this.projectService.sendInvitation(invitation);
 		}
 }

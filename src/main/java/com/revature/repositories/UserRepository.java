@@ -62,4 +62,16 @@ public class UserRepository {
 			return (User) users.get(0);
 		}
 	}
+	
+	public User getUserByEmail(String email) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+		
+		try(Session session = sf.openSession()){			
+			List<?> users = session.createQuery("from User u where u.email like :email")
+					.setParameter("email", email, StringType.INSTANCE).list();
+			
+			if(users.isEmpty()) return null;
+			return (User) users.get(0);
+		}
+	}
 }
