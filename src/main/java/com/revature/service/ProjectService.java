@@ -5,17 +5,21 @@ import org.springframework.stereotype.Service;
 
 import com.revature.dtos.InvitationDTO;
 import com.revature.models.Project;
+import com.revature.models.User;
 import com.revature.repositories.ProjectRepository;
+import com.revature.repositories.UserRepository;
 
 @Service
 public class ProjectService {
 	
 	ProjectRepository projectRepository;
+	UserRepository userRepository;
 	
 	@Autowired
-	public ProjectService(ProjectRepository projectRepository) {
+	public ProjectService(ProjectRepository projectRepository, UserRepository userRepository) {
 		super();
 		this.projectRepository = projectRepository;
+		this.userRepository = userRepository;
 	}
 	
 	public Project createProject(Project project) {
@@ -28,7 +32,9 @@ public class ProjectService {
 
 	public Project sendInvitation(InvitationDTO invitation) {
 		String userEmail = invitation.getEmail();
+		System.out.println(userEmail);
+		User user = userRepository.getUserByEmail(userEmail);
 		int projectID = invitation.getProjectID();
-		return projectRepository.addUser(userEmail, projectID);
+		return projectRepository.addUser(user, projectID);
 	}
 }

@@ -64,6 +64,7 @@ public class UserRepository {
 	}
 	
 	public User getUserByEmail(String email) {
+		System.out.println("getting user invoked");
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
 		try(Session session = sf.openSession()){			

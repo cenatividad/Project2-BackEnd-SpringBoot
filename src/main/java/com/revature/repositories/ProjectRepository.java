@@ -22,7 +22,7 @@ public class ProjectRepository {
 	@Autowired
 	EntityManagerFactory emf;
 	
-	UserRepository userRepository = new UserRepository();
+	
 	
 	public Project createProject(Project project) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
@@ -44,14 +44,14 @@ public class ProjectRepository {
 		}
 	}
 
-	public Project addUser(String userEmail, int projectID) {
-		SessionFactory sf = emf.unwrap(SessionFactory.class);
-		
-		User user = userRepository.getUserByEmail(userEmail);
+	public Project addUser(User user, int projectID) {
+
 		Project project = getProject(projectID);
 		UserProject userProject = new UserProject();
 		userProject.setProject(project);
 		userProject.setUser(user);
+		
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		if (project.getUserProjects() == null) {
 			userProject.setRole(UserRole.OWNER);
 			userProject.setInviteStatus(InviteStatus.ACCEPTED);
@@ -64,12 +64,15 @@ public class ProjectRepository {
 		try(Session session = sf.openSession()) {
 			int id = (int) session.save(userProject);
 			userProject.setuPID(id);
+			Project persistentProject = session.get(Project.class, project.getProjectID());
+			List<UserProject> list = persistentProject.getUserProjects();
+			list.add(userProject);
+			persistentProject.setUserProjects(list);
+			session.saveOrUpdate(persistentProject);
+			return persistentProject;
 		}
 		
-		List<UserProject> list = project.getUserProjects();
-		list.add(userProject);
-		project.setUserProjects(list);
-		return project;
+		
 		
 	}
 }
