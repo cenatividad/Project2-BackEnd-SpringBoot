@@ -47,7 +47,6 @@ public class UserService {
 		try {
 			User createdUser = userRepository.createUser(user);
 			createdUser.setPassword(null);
-			userRepository.createUser(user);
 			return createdUser;
 		} catch (PSQLException e) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, e.getMessage());
