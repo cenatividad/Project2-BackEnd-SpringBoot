@@ -1,5 +1,7 @@
 package com.revature.service;
 
+import java.util.List;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.revature.models.Project;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import com.revature.util.InputValidationUtil;
@@ -20,14 +23,17 @@ import com.revature.util.InputValidationUtil;
 public class UserService {
 	UserRepository userRepository;
 	
+	ProjectService projectService;
+	
 	/**
 	 * Constructor with relevant dependency injection
 	 * @param userRepository
 	 */
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, ProjectService projectService) {
 		super();
 		this.userRepository = userRepository;
+		this.projectService = projectService;
 	}
 
 	/**
@@ -47,7 +53,6 @@ public class UserService {
 		try {
 			User createdUser = userRepository.createUser(user);
 			createdUser.setPassword(null);
-			userRepository.createUser(user);
 			return createdUser;
 		} catch (PSQLException e) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -68,5 +73,9 @@ public class UserService {
 		
 		targetUser.setPassword(null);
 		return targetUser;
+	}
+
+	public List<Project> getUserProjects(int id) {
+		return projectService.getProjectsByUserId(id);
 	}
 }

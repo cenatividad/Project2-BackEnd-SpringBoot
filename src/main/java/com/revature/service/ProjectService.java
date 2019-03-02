@@ -1,5 +1,7 @@
 package com.revature.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +38,9 @@ public class ProjectService {
 		User user = userRepository.getUserByEmail(userEmail);
 		int projectID = invitation.getProjectID();
 		return projectRepository.addUser(user, projectID);
+	}
+	
+	public List<Project> getProjectsByUserId(int id) {
+		return projectRepository.getProjectsByUserId(id);
 	}
 }
