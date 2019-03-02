@@ -53,16 +53,21 @@ public class ProjectRepository {
 		userProject.setUser(user);
 		
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
-		if (project.getUserProjects() == null) {
-			userProject.setRole(UserRole.OWNER);
-			userProject.setInviteStatus(InviteStatus.ACCEPTED);
-			project.setUserProjects(new ArrayList<UserProject>());
-		} else {
-			userProject.setRole(UserRole.TEAM_MEMBER);
-			userProject.setInviteStatus(InviteStatus.PENDING);
-		}
-				
-		try(Session session = sf.openSession()) {
+			
+		try (Session session = sf.openSession()) {
+			List<?> ups = session.createQuery("select up.project from UserProject up where up.project.projectID = :id").setParameter("id", project.getProjectID()).list();
+			int upsLength = ups.size();
+		
+//		if (project.getUserProjects().get(0) == null) {
+			if (upsLength == 0) {
+				userProject.setRole(UserRole.OWNER);
+				userProject.setInviteStatus(InviteStatus.ACCEPTED);
+				project.setUserProjects(new ArrayList<UserProject>());
+			} else {
+				userProject.setRole(UserRole.TEAM_MEMBER);
+				userProject.setInviteStatus(InviteStatus.PENDING);
+			}
+		
 			int id = (int) session.save(userProject);
 			userProject.setuPID(id);
 			Project persistentProject = session.get(Project.class, project.getProjectID());
