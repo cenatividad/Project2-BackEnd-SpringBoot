@@ -34,8 +34,8 @@ public class ProjectController {
 			return this.projectService.createProject(project);
 		}
 		
-		@PostMapping("/viewProject")
-		public Project viewProject(@RequestBody int id) {
+		@GetMapping("/{id}")
+		public Project viewProject(@PathVariable(name="id") int id) {
 			return this.projectService.viewProject(id);
 		}
 		
