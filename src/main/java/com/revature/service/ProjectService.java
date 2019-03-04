@@ -40,7 +40,7 @@ public class ProjectService {
 		System.out.println(userEmail);
 		User user = userRepository.getUserByEmail(userEmail);
 		int projectID = invitation.getProjectID();
-		return projectRepository.addUser(user, projectID);
+		return projectRepository.inviteUser(user, projectID);
 	}
 	
 	public List<Project> getProjectsByUserId(int id) {
