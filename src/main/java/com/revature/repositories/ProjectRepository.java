@@ -62,9 +62,14 @@ public class ProjectRepository {
 			List<?> ups = session.createQuery("select up.project from UserProject up where up.project.projectID = :id").setParameter("id", project.getProjectID()).list();
 			int upsLength = ups.size();
 			
-			/*List<?> userProjectInvites = session.createQuery("select up.inviteStatus from UserProject up where up.project.projectID = :id AND up.user.userID = :uid")
+			System.out.println("Test 1");
+			
+			List<?> userProjectInvites = session.createQuery("select up.inviteStatus from UserProject up where up.project.projectID = :id AND up.user.userID = :uid")
 					.setParameter("id", project.getProjectID()).setParameter("uid", user.getUserID()).list();
-			int upiLength = userProjectInvites.size();*/
+			int upiLength = userProjectInvites.size();
+			
+			System.out.println("upi = " + userProjectInvites.get(0));
+			System.out.println("upiLength = " + upiLength);
 		
 //			if (project.getUserProjects().get(0) == null) {
 			if (upsLength == 0) {
@@ -72,23 +77,34 @@ public class ProjectRepository {
 				userProject.setInviteStatus(InviteStatus.ACCEPTED);
 				project.setUserProjects(new ArrayList<UserProject>());
 			} else {
-//				if(upiLength == 0 || userProjectInvites.get(0) == "DECLINED") {
+				if(upiLength == 0) {
 					userProject.setRole(UserRole.TEAM_MEMBER);
 					userProject.setInviteStatus(InviteStatus.PENDING);
-				/*} else {
+					int id = (int) session.save(userProject);
+					userProject.setuPID(id);
+					Project persistentProject = session.get(Project.class, project.getProjectID());
+					List<UserProject> list = persistentProject.getUserProjects();
+					list.add(userProject);
+					persistentProject.setUserProjects(list);
+					session.saveOrUpdate(persistentProject);
+					return persistentProject;
+				} else if(userProjectInvites.get(0).toString() == "DECLINED") {
+					userProject.setRole(UserRole.TEAM_MEMBER);
+					userProject.setInviteStatus(InviteStatus.PENDING);
+					int id = (int) session.save(userProject);
+					userProject.setuPID(id);
+					Project persistentProject = session.get(Project.class, project.getProjectID());
+					List<UserProject> list = persistentProject.getUserProjects();
+					list.add(userProject);
+					persistentProject.setUserProjects(list);
+					session.saveOrUpdate(persistentProject);
+					return persistentProject;
+				} else {
 					return null;
-				}*/
+				}
 			}
-		
-			int id = (int) session.save(userProject);
-			userProject.setuPID(id);
-			Project persistentProject = session.get(Project.class, project.getProjectID());
-			List<UserProject> list = persistentProject.getUserProjects();
-			list.add(userProject);
-			persistentProject.setUserProjects(list);
-			session.saveOrUpdate(persistentProject);
-			return persistentProject;
 		}
+		return project;
 	}
 		
 	@SuppressWarnings("unchecked")

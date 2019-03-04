@@ -39,6 +39,8 @@ public class ProjectService {
 		String userEmail = invitation.getEmail();
 		System.out.println(userEmail);
 		User user = userRepository.getUserByEmail(userEmail);
+		System.out.println("ProjectService.sendInvitation: user gotten");
+		System.out.println("ProjectService.sendInvitation: got user: " + user.getUserID());
 		int projectID = invitation.getProjectID();
 		return projectRepository.inviteUser(user, projectID);
 	}

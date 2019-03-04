@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StringType;
@@ -63,10 +64,11 @@ public class UserRepository {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
 		try(Session session = sf.openSession()){			
-			List<?> users = session.createQuery("from User u where u.email like :email")
+			List<?> users = session.createQuery("from User u where u.email = :email")
 					.setParameter("email", email, StringType.INSTANCE).list();
 			
 			if(users.isEmpty()) return null;
+			System.out.println("UserRepository.getUserEmail: got user " + ((User) users.get(0)).getUserID());
 			return (User) users.get(0);
 		}
 	}
