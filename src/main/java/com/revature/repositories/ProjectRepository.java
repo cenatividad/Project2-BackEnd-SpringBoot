@@ -43,21 +43,28 @@ public class ProjectRepository {
 	}
 
 	public Project inviteUser(User user, int projectID) {
-
+		/**
+		 * Gets a project based off of the project id that was passed
+		 * Create a new userProject (invitation to the project)
+		 * assign the project and user to that userProject
+		 */
 		Project project = getProject(projectID);
 		UserProject userProject = new UserProject();
 		userProject.setProject(project);
 		userProject.setUser(user);
 		
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
-			
+		
+		/**
+		 * 
+		 */
 		try (Session session = sf.openSession()) {
 			List<?> ups = session.createQuery("select up.project from UserProject up where up.project.projectID = :id").setParameter("id", project.getProjectID()).list();
 			int upsLength = ups.size();
 			
-			List<?> userProjectInvites = session.createQuery("select up.inviteStatus from UserProject up where up.project.projectID = :id AND up.userID = :uid")
+			/*List<?> userProjectInvites = session.createQuery("select up.inviteStatus from UserProject up where up.project.projectID = :id AND up.user.userID = :uid")
 					.setParameter("id", project.getProjectID()).setParameter("uid", user.getUserID()).list();
-			int upiLength = userProjectInvites.size();
+			int upiLength = userProjectInvites.size();*/
 		
 //			if (project.getUserProjects().get(0) == null) {
 			if (upsLength == 0) {
@@ -65,13 +72,12 @@ public class ProjectRepository {
 				userProject.setInviteStatus(InviteStatus.ACCEPTED);
 				project.setUserProjects(new ArrayList<UserProject>());
 			} else {
-				if(upiLength == 0 || userProjectInvites.get(0) == "DECLINED") {
+//				if(upiLength == 0 || userProjectInvites.get(0) == "DECLINED") {
 					userProject.setRole(UserRole.TEAM_MEMBER);
 					userProject.setInviteStatus(InviteStatus.PENDING);
-				} else {
+				/*} else {
 					return null;
-				}
-				
+				}*/
 			}
 		
 			int id = (int) session.save(userProject);
