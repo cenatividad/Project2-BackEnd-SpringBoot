@@ -21,4 +21,8 @@ public class StoryService {
 		return storyRepository.getStoriesByProject(id);
 	}
 
+	public Story addNewStoryToProject(int projectID, Story story) {
+		return this.storyRepository.addNewStoryToProject(projectID, story);
+	}
+
 }

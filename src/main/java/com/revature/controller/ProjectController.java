@@ -48,4 +48,9 @@ public class ProjectController {
 		public List<Story> getStoriesByProject(@PathVariable(name="id") int id){
 			return this.projectService.getStoriesByProject(id);
 		}
+		
+		@PostMapping("/{id}/stories")
+		public Story addNewStoryToProject(@PathVariable(name="id") int projectID, @RequestBody Story story) {
+			return this.projectService.addNewStoryToProject(projectID, story);
+		}
 }

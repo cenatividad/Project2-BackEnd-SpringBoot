@@ -12,12 +12,16 @@ import org.springframework.stereotype.Repository;
 
 import com.revature.models.Project;
 import com.revature.models.Story;
+import com.revature.models.StoryStatus;
 
 @Repository
 public class StoryRepository {
 
 	@Autowired
 	EntityManagerFactory emf;
+	
+	@Autowired
+	ProjectRepository projectRepository;
 	
 	public List<Story> getStoriesByProject(int id) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
@@ -26,9 +30,27 @@ public class StoryRepository {
 			Project project = session.get(Project.class, id);
 			List<Story> stories = project.getStories();
 			Hibernate.initialize(stories);
-			//for(Story s : project.getStories()) System.out.println(s.getStoryName());
-			//System.out.println(project);
 			return stories;
+		}
+	}
+
+	public Story addNewStoryToProject(int projectID, Story story) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+		
+		// Get detached reference to project
+		Project project = this.projectRepository.getProject(projectID);
+		
+		try (Session session = sf.openSession()) {
+			
+			// Persist the new story
+			story.setProject(project);
+			// Status of new stories must be PENDING
+			story.setStatus(StoryStatus.PENDING);
+			int id = (int) session.save(story);
+			story.setStoryID(id);
+			
+			// Return the story
+			return story;
 		}
 	}
 
