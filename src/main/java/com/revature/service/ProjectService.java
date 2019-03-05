@@ -53,4 +53,8 @@ public class ProjectService {
 		
 		return storyService.getStoriesByProject(id);
 	}
+
+	public Story addNewStoryToProject(int projectID, Story story) {
+		return this.storyService.addNewStoryToProject(projectID, story);
+	}
 }
