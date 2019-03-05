@@ -18,6 +18,10 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Story Entity
+ * @author tiand
+ */
 @Entity
 public final class Story {
 	@Id
@@ -25,16 +29,18 @@ public final class Story {
 	@Column(name = "story_id")
 	private int storyID;
 	
+	@JsonIgnore
 	@ManyToOne(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
 	@JoinColumn(name = "project_id")
 	private Project project;
 	
-	@Column(name = "story_name")
+	@Column(name = "story_name", nullable=false)
 	private String storyName;
 	
 	private String description;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
 	private StoryStatus status;
 	
 	private int points;
@@ -42,10 +48,6 @@ public final class Story {
 	@JsonIgnore
 	@ManyToMany(mappedBy="stories")
 	private List<User> owners;
-	
-	@OneToMany
-	@JoinColumn(name="story_id")
-	private List<UserProject> userProject;
 
 	public int getStoryID() {
 		return storyID;
@@ -105,14 +107,6 @@ public final class Story {
 		this.owners = owners;
 	}
 
-	public List<UserProject> getUserProject() {
-		return userProject;
-	}
-
-	public void setUserProject(List<UserProject> userProject) {
-		this.userProject = userProject;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -124,7 +118,6 @@ public final class Story {
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + storyID;
 		result = prime * result + ((storyName == null) ? 0 : storyName.hashCode());
-		result = prime * result + ((userProject == null) ? 0 : userProject.hashCode());
 		return result;
 	}
 
@@ -163,19 +156,13 @@ public final class Story {
 				return false;
 		} else if (!storyName.equals(other.storyName))
 			return false;
-		if (userProject == null) {
-			if (other.userProject != null)
-				return false;
-		} else if (!userProject.equals(other.userProject))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "Story [storyID=" + storyID + ", project=" + project + ", storyName=" + storyName + ", description="
-				+ description + ", status=" + status + ", points=" + points + ", owners=" + owners + ", userProject="
-				+ userProject + "]";
+				+ description + ", status=" + status + ", points=" + points + ", owners=" + owners + "]";
 	}
 
 	public Story(int storyID, Project project, String storyName, String description, StoryStatus status, int points,
@@ -188,7 +175,6 @@ public final class Story {
 		this.status = status;
 		this.points = points;
 		this.owners = owners;
-		this.userProject = userProject;
 	}
 
 	public Story() {

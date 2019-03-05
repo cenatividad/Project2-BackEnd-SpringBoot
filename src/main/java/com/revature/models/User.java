@@ -13,26 +13,49 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * User Entity
+ * @author tiand
+ *
+ */
 @Entity
+@Table(name="users")
 public final class User {
+	public static final int MIN_FIRST_NAME_LENGTH = 1;
+	public static final int MAX_FIRST_NAME_LENGTH = 255;
+	public static final int MIN_LAST_NAME_LENGTH = 1;
+	public static final int MAX_LAST_NAME_LENGTH = MAX_FIRST_NAME_LENGTH;
+	public static final int MIN_USERNAME_LENGTH = 1;
+	public static final int MAX_USERNAME_LENGTH = 255;
+	public static final int MIN_PASSWORD_LENGTH = 1;
+	public static final int MAX_PASSWORD_LENGTH = 255;
+	public static final int MIN_EMAIL_LENGTH = 1;
+	public static final int MAX_EMAIL_LENGTH = 255;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
+	@JsonProperty("id")
 	private int userID;
 	
+	@Column(nullable=false, unique=true)
 	private String username;
 	
+	@Column(nullable=false, unique=true)
 	private String email;
 	
+	@Column(nullable=false)
 	private String password;
 	
-	@Column(name = "first_name")
+	@Column(name = "first_name", nullable=false)
 	private String firstName;
 	
-	@Column(name = "last_name")
+	@Column(name = "last_name", nullable=false)
 	private String lastName;
 	
 	@JsonIgnore
@@ -42,7 +65,8 @@ public final class User {
 			inverseJoinColumns= {@JoinColumn(name="story_id")})
 	private List<Story> stories;
 	
-	@OneToMany(mappedBy="userID")
+	@JsonIgnore
+	@OneToMany(mappedBy="user")
 	private List<UserProject> userProject;
 
 	public int getUserID() {

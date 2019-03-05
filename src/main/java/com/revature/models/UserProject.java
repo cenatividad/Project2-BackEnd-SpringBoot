@@ -13,6 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.revature.models.Project;
+/**
+ * User Project Entity
+ * @author tiand
+ *
+ */
 @Entity
 @Table(name="user_project")
 public final class UserProject {
@@ -21,22 +27,11 @@ public final class UserProject {
 	@Column(name = "u_p_id")
 	private int uPID;
 	
-	//Unique combination with project ID
-	@Column(name = "user_id")
-	@ManyToOne
-	@JoinColumn(name="user_id")
-	private int userID;
-	
-	//Unique combination with user ID
-	@Column(name = "project_id")
-	@ManyToOne
-	@JoinColumn(name="project_id")
-	private int projectID;
-	
 	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
 	private UserRole role;
 	
-	@Column(name = "invite_status")
+	@Column(name = "invite_status", nullable=false)
 	@Enumerated(EnumType.STRING)
 	private InviteStatus inviteStatus;
 	
@@ -57,22 +52,6 @@ public final class UserProject {
 
 	public void setuPID(int uPID) {
 		this.uPID = uPID;
-	}
-
-	public int getUserID() {
-		return userID;
-	}
-
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
-
-	public int getProjectID() {
-		return projectID;
-	}
-
-	public void setProjectID(int projectID) {
-		this.projectID = projectID;
 	}
 
 	public UserRole getRole() {
@@ -122,11 +101,9 @@ public final class UserProject {
 		result = prime * result + contributionScore;
 		result = prime * result + ((inviteStatus == null) ? 0 : inviteStatus.hashCode());
 		result = prime * result + ((project == null) ? 0 : project.hashCode());
-		result = prime * result + projectID;
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result + uPID;
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		result = prime * result + userID;
 		return result;
 	}
 
@@ -148,8 +125,6 @@ public final class UserProject {
 				return false;
 		} else if (!project.equals(other.project))
 			return false;
-		if (projectID != other.projectID)
-			return false;
 		if (role != other.role)
 			return false;
 		if (uPID != other.uPID)
@@ -159,24 +134,19 @@ public final class UserProject {
 				return false;
 		} else if (!user.equals(other.user))
 			return false;
-		if (userID != other.userID)
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "UserProject [uPID=" + uPID + ", userID=" + userID + ", projectID=" + projectID + ", role=" + role
-				+ ", inviteStatus=" + inviteStatus + ", contributionScore=" + contributionScore + ", user=" + user
-				+ ", project=" + project + "]";
+		return "UserProject [uPID=" + uPID + ", role=" + role + ", inviteStatus=" + inviteStatus
+				+ ", contributionScore=" + contributionScore + ", user=" + user + ", project=" + project + "]";
 	}
 
-	public UserProject(int uPID, int userID, int projectID, UserRole role, InviteStatus inviteStatus,
-			int contributionScore, User user, Project project) {
+	public UserProject(int uPID, UserRole role, InviteStatus inviteStatus, int contributionScore, User user,
+			Project project) {
 		super();
 		this.uPID = uPID;
-		this.userID = userID;
-		this.projectID = projectID;
 		this.role = role;
 		this.inviteStatus = inviteStatus;
 		this.contributionScore = contributionScore;
