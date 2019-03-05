@@ -89,16 +89,27 @@ public class ProjectRepository {
 					session.saveOrUpdate(persistentProject);
 					return persistentProject;
 				} else if(userProjectInvites.get(0).toString() == "DECLINED") {
-					userProject.setRole(UserRole.TEAM_MEMBER);
-					userProject.setInviteStatus(InviteStatus.PENDING);
-					int id = (int) session.save(userProject);
-					userProject.setuPID(id);
-					Project persistentProject = session.get(Project.class, project.getProjectID());
-					List<UserProject> list = persistentProject.getUserProjects();
-					list.add(userProject);
-					persistentProject.setUserProjects(list);
-					session.saveOrUpdate(persistentProject);
-					return persistentProject;
+					Transaction tx = session.beginTransaction();
+					
+					UserProject up = new UserProject();
+					List<?> declinedUPS = session.createQuery("from UserProject up where up.project.projectID = :pid AND up.user.userID = :uid")
+								.setParameter("pid", project.getProjectID())
+								.setParameter("uid", user.getUserID()).list();
+					up = (UserProject) declinedUPS.get(0);
+					up.setInviteStatus(InviteStatus.PENDING);
+					
+					System.out.println("");
+					System.out.println("");
+					System.out.println("New Invite Status: " + up.getInviteStatus());
+					System.out.println("ID: " + up.getuPID());
+					System.out.println("");
+					System.out.println("");
+					
+					
+					session.merge(up);
+					session.flush();
+					tx.commit();
+					return null;
 				} else {
 					return null;
 				}
