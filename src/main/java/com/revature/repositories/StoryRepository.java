@@ -7,6 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -54,4 +55,19 @@ public class StoryRepository {
 		}
 	}
 
+	public Story updateStory(Story story) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+	
+		try (Session session = sf.openSession()) {
+			Transaction tx = session.beginTransaction();
+			Story s = session.get(Story.class, story.getStoryID());
+			s.setDescription(story.getDescription());
+			s.setPoints(story.getPoints());
+			s.setStatus(story.getStatus());
+			s.setStoryName(story.getStoryName());
+			session.flush();
+			tx.commit();
+			return s;
+		}
+	}
 }
