@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.dtos.InvitationDTO;
+import com.revature.dtos.InvitationStatusDTO;
 import com.revature.models.Project;
-import com.revature.models.User;
 import com.revature.models.Story;
+import com.revature.models.User;
+import com.revature.models.UserProject;
 import com.revature.repositories.ProjectRepository;
 import com.revature.repositories.UserRepository;
 
@@ -19,6 +21,7 @@ public class ProjectService {
 	UserRepository userRepository;
 	
 	StoryService storyService;
+	
 	@Autowired
 	public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, StoryService storyService) {
 		super();
@@ -50,11 +53,18 @@ public class ProjectService {
 	}
 
 	public List<Story> getStoriesByProject(int id) {
-		
 		return storyService.getStoriesByProject(id);
 	}
 
 	public Story addNewStoryToProject(int projectID, Story story) {
 		return this.storyService.addNewStoryToProject(projectID, story);
+	}
+
+	public List<UserProject> getInvitations(int uID) {
+		return this.projectRepository.viewInvitations(uID);
+	}
+
+	public void processInvitations(InvitationStatusDTO invStat) {
+		this.projectRepository.processInvitation(invStat);
 	}
 }

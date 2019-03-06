@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.dtos.InvitationDTO;
+import com.revature.dtos.InvitationStatusDTO;
 import com.revature.models.Project;
 import com.revature.models.Story;
+import com.revature.models.UserProject;
 import com.revature.service.ProjectService;
 
 @RestController
@@ -42,6 +44,16 @@ public class ProjectController {
 		@PostMapping("/invite")
 		public Project inviteUser(@RequestBody InvitationDTO invitation) {
 			return this.projectService.sendInvitation(invitation);
+		}
+		
+		@PostMapping("/viewInvitations")
+		public List<UserProject> viewInvitations(@RequestBody int uID) {
+			return this.projectService.getInvitations(uID);
+		}
+		
+		@PostMapping("/processInvitation")
+		public void processInvitation(@RequestBody InvitationStatusDTO invStat) {
+			this.projectService.processInvitations(invStat);
 		}
 
 		@GetMapping("/{id}/stories")

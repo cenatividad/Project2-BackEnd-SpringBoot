@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.revature.dtos.InvitationStatusDTO;
 import com.revature.models.InviteStatus;
 import com.revature.models.Project;
 import com.revature.models.User;
@@ -136,6 +137,51 @@ public class ProjectRepository {
 			tx.commit();
 			return (List<Project>) projects;
 		}
-		// TODO Auto-generated method stub
+	}
+
+	public List<UserProject> viewInvitations(int uID) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+		
+		try(Session session = sf.openSession()) {
+			Transaction tx = session.beginTransaction();
+			
+			@SuppressWarnings("unchecked")
+			List<UserProject> ups = session.createQuery("from UserProject up where up.user.userID = :id AND up.inviteStatus = :status")
+					.setParameter("id", uID)
+					.setParameter("status", InviteStatus.PENDING).list();
+			if(ups.size() == 0) {
+				System.out.println("ups.size() == 0");
+				tx.commit();
+				return null;
+			}
+			
+			tx.commit();
+			return ups;
+		}
+	}
+
+	public void processInvitation(InvitationStatusDTO invStat) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+		
+		try (Session session = sf.openSession()) {
+			Transaction tx = session.beginTransaction();
+			
+			UserProject up = new UserProject();
+			List<?> pendingUPS = session.createQuery("from UserProject up where up.uPID = :upid")
+						.setParameter("upid", invStat.getUpid()).list();
+			up = (UserProject) pendingUPS.get(0);
+			
+			if (invStat.getStatus().equals(InviteStatus.ACCEPTED.toString())) {
+				up.setInviteStatus(InviteStatus.ACCEPTED);
+			} else if (invStat.getStatus().equals(InviteStatus.DECLINED.toString())) {
+				up.setInviteStatus(InviteStatus.DECLINED);
+			} else {
+				System.out.println("Soemthing went wrong.");
+			}
+			
+			session.merge(up);
+			session.flush();
+			tx.commit();
+		}
 	}
 }
