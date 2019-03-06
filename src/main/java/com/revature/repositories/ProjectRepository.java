@@ -145,8 +145,9 @@ public class ProjectRepository {
 		
 		try (Session session = sf.openSession()){
 			Transaction tx = session.beginTransaction();
-			List<?> projectIds = session.createQuery("select up.project.projectID from UserProject up where up.user.userID = :id")
-					.setParameter("id", id).list();
+			List<?> projectIds = session.createQuery("select up.project.projectID from UserProject up where up.user.userID = :id AND up.inviteStatus = :status")
+					.setParameter("id", id)
+					.setParameter("status", InviteStatus.ACCEPTED).list();
 			if (projectIds.size() == 0) {
 				tx.commit();
 				return new ArrayList<Project>();
