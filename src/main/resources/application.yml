@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DBROLE}
+    password: ${DBPASS}
+    url: ${DBURL}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.POstgreSQLDialect
+    show-sql: true
+server: 
+  port: 8081
