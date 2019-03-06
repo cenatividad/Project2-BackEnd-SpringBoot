@@ -15,9 +15,7 @@ import com.revature.repositories.UserRepository;
 import com.revature.util.InputValidationUtil;
 
 /**
- * User-related business logic
- * @author tiand
- *
+ * Service bean that handles business logic for user-centered requests
  */
 @Service
 public class UserService {
@@ -38,8 +36,6 @@ public class UserService {
 
 	/**
 	 * Verifies proper members before delegating user creation to the repository layer.
-	 * @param user
-	 * @return
 	 */
 	public User createUser(User user) {
 		InputValidationUtil.isEmailOK(user.getEmail());
@@ -60,9 +56,9 @@ public class UserService {
 	}
 
 	/**
-	 * Service to verify user credentials and log them in if they're correct
-	 * @param user
-	 * @return
+	 * Service to verify user credentials and log them in if they're correct. Will throw an 
+	 * error if the credentials are invalid. Error will not be specific about which credential is
+	 * wrong.
 	 */
 	public User loginUser(User user) {
 		User targetUser = userRepository.getUserByUsername(user.getUsername());
@@ -75,6 +71,10 @@ public class UserService {
 		return targetUser;
 	}
 
+	/**
+	 * Communicates with the ProjectService to retrieve a list of projects related to the User
+	 * whose ID is passed.
+	 */
 	public List<Project> getUserProjects(int id) {
 		return projectService.getProjectsByUserId(id);
 	}

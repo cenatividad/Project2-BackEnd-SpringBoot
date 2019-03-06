@@ -29,6 +29,7 @@ public final class Story {
 	@Column(name = "story_id")
 	private int storyID;
 	
+	// JsonIgnore to avoid issues with JSON infinitely recursing through the lists.
 	@JsonIgnore
 	@ManyToOne(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
 	@JoinColumn(name = "project_id")
@@ -45,6 +46,7 @@ public final class Story {
 	
 	private int points;
 	
+	// JsonIgnore to avoid issues with JSON infinitely recursing through the lists.
 	@JsonIgnore
 	@ManyToMany(mappedBy="stories")
 	private List<User> owners;

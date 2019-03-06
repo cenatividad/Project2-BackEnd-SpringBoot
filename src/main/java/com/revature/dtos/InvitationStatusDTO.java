@@ -1,5 +1,9 @@
 package com.revature.dtos;
 
+/**
+ * DTO for invitation status change requests. Allows for convenient information transfer for 
+ * the relevant requests
+ */
 public class InvitationStatusDTO {
 	private int upid;
 	private String status;
