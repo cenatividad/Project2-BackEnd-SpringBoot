@@ -26,10 +26,7 @@ public class UserRepository {
 
 	
 	/**
-	 * Persists a new user
-	 * @param user
-	 * @return
-	 * @throws PSQLException
+	 * Create and persists a new user
 	 */
 	public User createUser(User user) throws PSQLException{
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
@@ -43,9 +40,7 @@ public class UserRepository {
 
 
 	/**
-	 * Repository method to retrieve a user based on their username
-	 * @param username
-	 * @return
+	 * Repository method to retrieve a user based on their unique username
 	 */
 	public User getUserByUsername(String username) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
@@ -59,6 +54,9 @@ public class UserRepository {
 		}
 	}
 	
+	/**
+	 * Retrieves a user based on their unique email
+	 */
 	public User getUserByEmail(String email) {
 		System.out.println("getting user invoked");
 		SessionFactory sf = emf.unwrap(SessionFactory.class);

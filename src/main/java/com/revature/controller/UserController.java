@@ -39,6 +39,9 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	/**
+	 * Handles a request to get a user based on its ID.
+	 */
 	@GetMapping("{id}")
 	public User getUserById(@PathVariable(name="id") int id) {
 		User user = new User();
@@ -46,6 +49,9 @@ public class UserController {
 		return user;
 	}
 	
+	/**
+	 * Handles a request to get all objects related to a specific user.
+	 */
 	@GetMapping("{id}/projects")
 	public List<Project> getUserProjects(@PathVariable(name="id") int id) {
 		List<Project> projectList = userService.getUserProjects(id);

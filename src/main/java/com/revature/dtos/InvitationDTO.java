@@ -1,5 +1,9 @@
 package com.revature.dtos;
 
+/**
+ * DTO for invitations users receive in relation to objects. Used for handling invitation requests
+ * and consolidating the relevant information into a simple, convenient class.
+ */
 public class InvitationDTO {
 	private String email;
 	private int projectID;

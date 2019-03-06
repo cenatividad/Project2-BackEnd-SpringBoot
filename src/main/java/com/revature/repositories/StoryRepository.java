@@ -15,6 +15,9 @@ import com.revature.models.Project;
 import com.revature.models.Story;
 import com.revature.models.StoryStatus;
 
+/**
+ * Repository Bean that handles database interaction in relation to Stories.
+ */
 @Repository
 public class StoryRepository {
 
@@ -24,6 +27,9 @@ public class StoryRepository {
 	@Autowired
 	ProjectRepository projectRepository;
 	
+	/**
+	 * Returns a list of all stories related to the User whose ID is passed.
+	 */
 	public List<Story> getStoriesByProject(int id) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
@@ -35,6 +41,9 @@ public class StoryRepository {
 		}
 	}
 
+	/**
+	 * Creates a new story with the passed data and related project, then saves it to the database
+	 */
 	public Story addNewStoryToProject(int projectID, Story story) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
@@ -55,6 +64,11 @@ public class StoryRepository {
 		}
 	}
 
+	/**
+	 * Updates a story with the information from the passed Story. This is a wholesale update and if
+	 * any members are intended to remain the same, the passed Story should have the old values in 
+	 * it. 
+	 */
 	public Story updateStory(Story story) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 	

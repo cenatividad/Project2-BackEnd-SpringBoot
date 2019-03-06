@@ -18,11 +18,17 @@ import com.revature.models.User;
 import com.revature.models.UserProject;
 import com.revature.models.UserRole;
 
+/**
+ * Repository Bean to handle database operations relating to Projects.
+ */
 @Repository
 public class ProjectRepository {
 	@Autowired
 	EntityManagerFactory emf;
 	
+	/**
+	 * Creates a project and saves it into the database.
+	 */
 	public Project createProject(Project project) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
@@ -33,6 +39,9 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Get the project related to the passed ID.
+	 */
 	public Project getProject(int id) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		Project project = new Project();
@@ -43,12 +52,12 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Gets a project based off of the project id that was passed
+	 * Create a new userProject (invitation to the project)
+	 * assign the project and user to that userProject
+	 */
 	public Project inviteUser(User user, int projectID) {
-		/**
-		 * Gets a project based off of the project id that was passed
-		 * Create a new userProject (invitation to the project)
-		 * assign the project and user to that userProject
-		 */
 		Project project = getProject(projectID);
 		UserProject userProject = new UserProject();
 		userProject.setProject(project);
@@ -127,6 +136,9 @@ public class ProjectRepository {
 		return project;
 	}
 		
+	/**
+	 * Returns a list of projects that are related to the passed in user ID.
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Project> getProjectsByUserId(int id) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
@@ -147,6 +159,10 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Returns a list of all UserProject joint entities where the invitation status is PENDING
+	 * and the related user has the passed ID.
+	 */
 	public List<UserProject> viewInvitations(int uID) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
@@ -168,6 +184,10 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Retrieves the UserProject defined in the passed DTO and updates the invitation status to the
+	 * specified one in the passed DTO. The change is merged into the database.
+	 */
 	public void processInvitation(InvitationStatusDTO invStat) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
