@@ -57,27 +57,35 @@ public class ProjectRepository {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
 		/**
-		 * 
+		 * Checks if any invitations have been sent by project. If none have been, it assumes that this invite is adding the creator, so automatically confirms their invite and sets
+		 * them as an owner. If invites already exist, it creates a new on for the target user and sets invite's status to pending if the user has not been invited or has previously
+		 * declined an invitation. 
 		 */
 		try (Session session = sf.openSession()) {
 			List<?> ups = session.createQuery("select up.project from UserProject up where up.project.projectID = :id").setParameter("id", project.getProjectID()).list();
 			int upsLength = ups.size();
 			
+			
 			System.out.println("Test 1");
 			
 			List<?> userProjectInvites = session.createQuery("select up.inviteStatus from UserProject up where up.project.projectID = :id AND up.user.userID = :uid")
 					.setParameter("id", project.getProjectID()).setParameter("uid", user.getUserID()).list();
+			System.out.println(userProjectInvites);
 			int upiLength = userProjectInvites.size();
+			System.out.println(upiLength);
 			
-			System.out.println("upi = " + userProjectInvites.get(0));
-			System.out.println("upiLength = " + upiLength);
-		
+//			System.out.println("upi = " + userProjectInvites.get(0));
+//			System.out.println("upiLength = " + upiLength);
+//		
 //			if (project.getUserProjects().get(0) == null) {
 			if (upsLength == 0) {
+				System.out.println("adding owner");
 				userProject.setRole(UserRole.OWNER);
 				userProject.setInviteStatus(InviteStatus.ACCEPTED);
 				project.setUserProjects(new ArrayList<UserProject>());
+				session.save(userProject);
 			} else {
+				System.out.println("adding invite");
 				if(upiLength == 0) {
 					userProject.setRole(UserRole.TEAM_MEMBER);
 					userProject.setInviteStatus(InviteStatus.PENDING);
