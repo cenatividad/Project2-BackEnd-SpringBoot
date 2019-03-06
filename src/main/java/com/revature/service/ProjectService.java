@@ -53,7 +53,6 @@ public class ProjectService {
 	}
 
 	public List<Story> getStoriesByProject(int id) {
-		
 		return storyService.getStoriesByProject(id);
 	}
 
