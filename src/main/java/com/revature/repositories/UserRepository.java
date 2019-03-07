@@ -70,4 +70,17 @@ public class UserRepository {
 			return (User) users.get(0);
 		}
 	}
+
+	/**
+	 * Fetch user information from database cooresponding to provided userId
+	 * @param userId
+	 * @return
+	 */
+	public User getUserById(int userId) {
+		SessionFactory sf = emf.unwrap(SessionFactory.class);
+		try (Session session = sf.openSession()) {
+			User user = session.get(User.class, userId);
+			return user;
+		}
+	}
 }

@@ -3,6 +3,7 @@ package com.revature.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,8 +45,10 @@ public class UserController {
 	 */
 	@GetMapping("{id}")
 	public User getUserById(@PathVariable(name="id") int id) {
-		User user = new User();
-		user.setUserID(id);
+		User user = userService.getUserById(id);
+		if (user == null) {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		}
 		return user;
 	}
 	
