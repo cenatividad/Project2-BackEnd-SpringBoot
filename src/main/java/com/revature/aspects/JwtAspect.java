@@ -131,6 +131,7 @@ public class JwtAspect {
 	 * @throws Throwable
 	 */
 	@Around("!execution(* com.revature.service.UserService.loginUser(..)) && "
+			+ "!execution(* com.revature.service.UserService.createUser(..)) && "
 			+ "execution(* com.revature.service.UserService.*(..)) ||"
 			+ "execution(* com.revature.service.ProjectService.*(..)) ||"
 			+ "execution(* com.revature.service.StoryService.*(..))")
