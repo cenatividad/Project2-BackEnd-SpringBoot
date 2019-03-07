@@ -176,7 +176,7 @@ public class ProjectRepository {
 			} else if (invStat.getStatus().equals(InviteStatus.DECLINED.toString())) {
 				up.setInviteStatus(InviteStatus.DECLINED);
 			} else {
-				System.out.println("Soemthing went wrong.");
+				System.out.println("Something went wrong.");
 			}
 			
 			session.merge(up);
