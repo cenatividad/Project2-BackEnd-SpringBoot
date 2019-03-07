@@ -36,8 +36,9 @@ public class UserService {
 
 	/**
 	 * Verifies proper members before delegating user creation to the repository layer.
+	 * @throws HttpClientErrorException 
 	 */
-	public User createUser(User user) {
+	public User createUser(User user) throws HttpClientErrorException {
 		InputValidationUtil.isEmailOK(user.getEmail());
 		InputValidationUtil.isUsernameOK(user.getUsername());
 		InputValidationUtil.isPasswordOK(user.getPassword());
@@ -59,8 +60,9 @@ public class UserService {
 	 * Service to verify user credentials and log them in if they're correct. Will throw an 
 	 * error if the credentials are invalid. Error will not be specific about which credential is
 	 * wrong.
+	 * @throws HttpClientErrorException 
 	 */
-	public User loginUser(User user) {
+	public User loginUser(User user) throws HttpClientErrorException {
 		User targetUser = userRepository.getUserByUsername(user.getUsername());
 		
 		if(targetUser == null || !BCrypt.checkpw(user.getPassword(), targetUser.getPassword())) {
@@ -74,8 +76,14 @@ public class UserService {
 	/**
 	 * Communicates with the ProjectService to retrieve a list of projects related to the User
 	 * whose ID is passed.
+	 * @throws com.revature.util.HttpClientErrorException 
 	 */
-	public List<Project> getUserProjects(int id) {
-		return projectService.getProjectsByUserId(id);
+	public List<Project> getUserProjects(int id) throws HttpClientErrorException {
+		List<Project> projects = projectService.getProjectsByUserId(id);
+		if(projects == null) {
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "ID not found");
+		} else {
+			return projects;
+		}
 	}
 }
