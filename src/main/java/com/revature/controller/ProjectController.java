@@ -110,4 +110,5 @@ public class ProjectController {
 	public ResponseEntity<String> handleException(HttpClientErrorException e) {
 		return ResponseEntity.status(e.getStatusCode().value()).body(e.getMessage());
 	}
+
 }
