@@ -89,4 +89,8 @@ public class UserService {
 	public List<Project> getUserProjects(int id) {
 		return projectService.getProjectsByUserId(id);
 	}
+
+	public User getLoggedUser(Integer userId) {
+		return userRepository.getUserById(userId);
+	}
 }

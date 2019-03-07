@@ -132,6 +132,7 @@ public class JwtAspect {
 	 */
 	@Around("!execution(* com.revature.service.UserService.loginUser(..)) && "
 			+ "!execution(* com.revature.service.UserService.createUser(..)) && "
+			+ "!execution(* com.revature.service.UserService.getLoggedUser(..)) && "
 			+ "execution(* com.revature.service.UserService.*(..)) ||"
 			+ "execution(* com.revature.service.ProjectService.*(..)) ||"
 			+ "execution(* com.revature.service.StoryService.*(..))")
@@ -158,5 +159,14 @@ public class JwtAspect {
 			jwtCookie.setPath("/");
 			response.addCookie(jwtCookie);
 		}
+	}
+	
+	/**
+	 * Advice to get userId claim from JWT to get logged in user information
+	 */
+	@Around("execution(* com.revature.service.UserService.getLoggedUser(Integer))")
+	public Object getClaimedId(ProceedingJoinPoint pjp) throws Throwable {
+		Object obj = pjp.proceed(new Object[] {this.verifyJwt().getClaim(JWT_USER_ID_CLAIM_NAME).asInt()});
+		return obj;
 	}
 }
