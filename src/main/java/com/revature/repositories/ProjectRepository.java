@@ -18,11 +18,17 @@ import com.revature.models.User;
 import com.revature.models.UserProject;
 import com.revature.models.UserRole;
 
+/**
+ * Repository Bean to handle database operations relating to Projects.
+ */
 @Repository
 public class ProjectRepository {
 	@Autowired
 	EntityManagerFactory emf;
 	
+	/**
+	 * Creates a project and saves it into the database.
+	 */
 	public Project createProject(Project project) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
@@ -33,6 +39,9 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Get the project related to the passed ID.
+	 */
 	public Project getProject(int id) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		Project project = new Project();
@@ -43,12 +52,12 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Gets a project based off of the project id that was passed
+	 * Create a new userProject (invitation to the project)
+	 * assign the project and user to that userProject
+	 */
 	public Project inviteUser(User user, int projectID) {
-		/**
-		 * Gets a project based off of the project id that was passed
-		 * Create a new userProject (invitation to the project)
-		 * assign the project and user to that userProject
-		 */
 		Project project = getProject(projectID);
 		UserProject userProject = new UserProject();
 		userProject.setProject(project);
@@ -57,27 +66,35 @@ public class ProjectRepository {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
 		/**
-		 * 
+		 * Checks if any invitations have been sent by project. If none have been, it assumes that this invite is adding the creator, so automatically confirms their invite and sets
+		 * them as an owner. If invites already exist, it creates a new on for the target user and sets invite's status to pending if the user has not been invited or has previously
+		 * declined an invitation. 
 		 */
 		try (Session session = sf.openSession()) {
 			List<?> ups = session.createQuery("select up.project from UserProject up where up.project.projectID = :id").setParameter("id", project.getProjectID()).list();
 			int upsLength = ups.size();
 			
+			
 			System.out.println("Test 1");
 			
 			List<?> userProjectInvites = session.createQuery("select up.inviteStatus from UserProject up where up.project.projectID = :id AND up.user.userID = :uid")
 					.setParameter("id", project.getProjectID()).setParameter("uid", user.getUserID()).list();
+			System.out.println(userProjectInvites);
 			int upiLength = userProjectInvites.size();
+			System.out.println(upiLength);
 			
-			System.out.println("upi = " + userProjectInvites.get(0));
-			System.out.println("upiLength = " + upiLength);
-		
+//			System.out.println("upi = " + userProjectInvites.get(0));
+//			System.out.println("upiLength = " + upiLength);
+//		
 //			if (project.getUserProjects().get(0) == null) {
 			if (upsLength == 0) {
+				System.out.println("adding owner");
 				userProject.setRole(UserRole.OWNER);
 				userProject.setInviteStatus(InviteStatus.ACCEPTED);
 				project.setUserProjects(new ArrayList<UserProject>());
+				session.save(userProject);
 			} else {
+				System.out.println("adding invite");
 				if(upiLength == 0) {
 					userProject.setRole(UserRole.TEAM_MEMBER);
 					userProject.setInviteStatus(InviteStatus.PENDING);
@@ -119,14 +136,18 @@ public class ProjectRepository {
 		return project;
 	}
 		
+	/**
+	 * Returns a list of projects that are related to the passed in user ID.
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Project> getProjectsByUserId(int id) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
 		try (Session session = sf.openSession()){
 			Transaction tx = session.beginTransaction();
-			List<?> projectIds = session.createQuery("select up.project.projectID from UserProject up where up.user.userID = :id")
-					.setParameter("id", id).list();
+			List<?> projectIds = session.createQuery("select up.project.projectID from UserProject up where up.user.userID = :id AND up.inviteStatus = :status")
+					.setParameter("id", id)
+					.setParameter("status", InviteStatus.ACCEPTED).list();
 			if (projectIds.size() == 0) {
 				tx.commit();
 				return new ArrayList<Project>();
@@ -139,6 +160,10 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Returns a list of all UserProject joint entities where the invitation status is PENDING
+	 * and the related user has the passed ID.
+	 */
 	public List<UserProject> viewInvitations(int uID) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		
@@ -160,6 +185,10 @@ public class ProjectRepository {
 		}
 	}
 
+	/**
+	 * Retrieves the UserProject defined in the passed DTO and updates the invitation status to the
+	 * specified one in the passed DTO. The change is merged into the database.
+	 */
 	public void processInvitation(InvitationStatusDTO invStat) {
 		SessionFactory sf = emf.unwrap(SessionFactory.class);
 		

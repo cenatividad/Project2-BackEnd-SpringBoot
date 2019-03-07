@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * Project entity
+ * Entity for a project.
  * @author tiand
  */
 @Entity
@@ -26,6 +26,7 @@ public final class Project {
 	@Column(name = "project_id")
 	private int projectID;
 	
+	// JsonIgnore to avoid issues with JSON infinitely recursing through the lists.
 	@JsonIgnore
 	@OneToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY, mappedBy="project")
 	private List<Story> stories;
@@ -35,6 +36,7 @@ public final class Project {
 	
 	private String description;
 	
+	// JsonIgnore to avoid issues with JSON infinitely recursing through the lists.
 	@JsonIgnore
 	@OneToMany(mappedBy="project")
 	private List<UserProject> userProjects;

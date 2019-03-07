@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Table(name="users")
 public final class User {
+	// Some defined parameters for input validation in terms of string length
 	public static final int MIN_FIRST_NAME_LENGTH = 1;
 	public static final int MAX_FIRST_NAME_LENGTH = 255;
 	public static final int MIN_LAST_NAME_LENGTH = 1;
@@ -58,6 +59,7 @@ public final class User {
 	@Column(name = "last_name", nullable=false)
 	private String lastName;
 	
+	// JsonIgnore to avoid issues with JSON infinitely recursing through the lists.
 	@JsonIgnore
 	@ManyToMany(cascade= {CascadeType.ALL}, fetch=FetchType.LAZY)
 	@JoinTable(name="user_story",
@@ -65,6 +67,7 @@ public final class User {
 			inverseJoinColumns= {@JoinColumn(name="story_id")})
 	private List<Story> stories;
 	
+	// JsonIgnore to avoid issues with JSON infinitely recursing through the lists.
 	@JsonIgnore
 	@OneToMany(mappedBy="user")
 	private List<UserProject> userProject;
