@@ -33,6 +33,17 @@ public class UserService {
 		this.userRepository = userRepository;
 		this.projectService = projectService;
 	}
+	
+	/**
+	 * Get user data from userID
+	 */
+	public User getUserById(int userId) {
+		User user = userRepository.getUserById(userId);
+		if (user != null) {
+			user.setPassword(null);
+		}
+		return user;
+	}
 
 	/**
 	 * Verifies proper members before delegating user creation to the repository layer.
