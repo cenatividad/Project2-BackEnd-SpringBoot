@@ -40,9 +40,9 @@ public class StoryController {
 		return this.storyService.updateStory(story);
 	}
 
+	
 	/**
 	 * Exception handler that provides meaningful exception messages to the client.
-	 * 
 	 * @param e
 	 * @return
 	 */
